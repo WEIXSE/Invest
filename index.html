@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сохраним память вместе | Инвестиционное предложение</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1a1a1a;
+            --secondary: #4a4a4a;
+            --accent: #8b7866;
+            --accent-light: #c4b5a3;
+            --light: #f8f6f3;
+            --background: #ffffff;
+            --transition: all 0.3s ease;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Manrope', sans-serif;
+            color: var(--primary);
+            background-color: var(--background);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            padding: 25px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            background-color: rgba(255, 255, 255, 0.97);
+            backdrop-filter: blur(10px);
+            transition: var(--transition);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        header.scrolled {
+            padding: 15px 0;
+            box-shadow: var(--shadow);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 8px;
+            background-color: #4caf50;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 10000;
+            transform: translateX(150%);
+            transition: transform 0.4s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .notification.error {
+            background-color: #f44336;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .loader {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        
+        .btn:disabled:hover {
+            transform: none;
+            box-shadow: 0 5px 15px rgba(139, 120, 102, 0.3);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 180px 0 100px;
+            text-align: center;
+            position: relative;
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1516738901171-8eb4fc13bd20?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80') no-repeat center center/cover;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3.8rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 700px;
+            margin: 0 auto 50px;
+            font-weight: 300;
+        }
+
+        /* Sections */
+        section {
+            padding: 100px 0;
+        }
+
+        .section-title {
+            font-size: 2.8rem;
+            font-weight: 600;
+            margin-bottom: 60px;
+            text-align: center;
+            position: relative;
+            color: var(--primary);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, var(--accent-light), var(--accent));
+            border-radius: 2px;
+        }
+
+        /* About Section */
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .about-text {
+            padding-right: 20px;
+        }
+
+        .about-image {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+
+        .about-image img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            display: block;
+            transition: var(--transition);
+        }
+
+        .about-image:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Benefits */
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .benefit-card {
+            background: var(--light);
+            padding: 40px 30px;
+            border-radius: 12px;
+            text-align: center;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+            border-bottom: 4px solid transparent;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-hover);
+            border-bottom: 4px solid var(--accent);
+        }
+
+        .benefit-icon {
+            font-size: 2.8rem;
+            margin-bottom: 25px;
+            color: var(--accent);
+            background: linear-gradient(135deg, var(--accent-light), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .benefit-card h3 {
+            font-size: 1.6rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        .benefit-card p {
+            color: var(--secondary);
+            font-size: 1.05rem;
+        }
+
+        /* Cooperation */
+        .cooperation {
+            background-color: var(--light);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cooperation::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1516738901171-8eb4fc13bd20?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80') no-repeat center center/cover;
+            opacity: 0.03;
+        }
+
+        .offer-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .offer-card {
+            background: white;
+            padding: 50px 30px;
+            border-radius: 12px;
+            text-align: center;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+            border-top: 4px solid var(--accent);
+        }
+
+        .offer-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .offer-card h3 {
+            font-size: 1.7rem;
+            margin-bottom: 25px;
+            color: var(--accent);
+        }
+
+        .offer-card p {
+            color: var(--secondary);
+            font-size: 1.1rem;
+        }
+
+        /* Gallery Section */
+        .gallery {
+            padding: 80px 0;
+            background: var(--light);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 50px;
+        }
+
+        .gallery-item {
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            height: 280px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+
+        /* Form */
+        .form-section {
+            background: linear-gradient(to bottom, #f9f9f9, #f0f0f0);
+            position: relative;
+        }
+
+        .form-container {
+            max-width: 650px;
+            margin: 0 auto;
+            background: white;
+            padding: 60px;
+            border-radius: 16px;
+            box-shadow: var(--shadow-hover);
+            position: relative;
+            z-index: 2;
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 12px;
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 18px 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            font-family: 'Manrope', sans-serif;
+            font-size: 1.05rem;
+            transition: var(--transition);
+            background: #fafafa;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(139, 120, 102, 0.2);
+            background: white;
+        }
+
+        .radio-group {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .radio-option {
+            position: relative;
+        }
+
+        .radio-option input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .radio-option label {
+            display: block;
+            padding: 18px;
+            background: var(--light);
+            border: 2px solid transparent;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .radio-option input:checked + label {
+            background-color: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .checkbox {
+            display: flex;
+            align-items: flex-start;
+            margin-top: 25px;
+        }
+
+        .checkbox input {
+            margin-right: 15px;
+            margin-top: 7px;
+        }
+
+        .checkbox label {
+            font-size: 1rem;
+            color: var(--secondary);
+            line-height: 1.6;
+        }
+
+        .btn {
+            display: inline-block;
+            background: linear-gradient(to right, var(--accent), var(--accent-light));
+            color: white;
+            padding: 18px 40px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            box-shadow: 0 5px 15px rgba(139, 120, 102, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(139, 120, 102, 0.4);
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        /* Contact */
+        .contact-info {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .contact-item {
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .contact-item a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .contact-item a:hover {
+            color: var(--primary);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--primary);
+            color: white;
+            padding: 80px 0 40px;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .footer-content p {
+            opacity: 0.8;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 0.8s forwards;
+        }
+
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.4s; }
+        .delay-3 { animation-delay: 0.6s; }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .about-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            
+            .about-text {
+                padding-right: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+            
+            .section-title {
+                font-size: 2.3rem;
+            }
+            
+            .radio-group {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-container {
+                padding: 30px 25px;
+            }
+            
+            .contact-item {
+                flex-direction: column;
+                gap: 5px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero {
+                padding: 150px 0 80px;
+            }
+            
+            .hero h1 {
+                font-size: 2.3rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            section {
+                padding: 80px 0;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header id="header">
+        <div class="container header-content">
+            <a href="#" class="logo">Память<span>.</span></a>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1 class="fade-in">Сохраним память вместе</h1>
+            <p class="fade-in delay-1">Инвестиционное предложение с быстрой окупаемостью</p>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2 class="section-title fade-in">О проекте</h2>
+                    <div class="fade-in delay-1">
+                        <p>Уважаемые друзья, знакомые, все те, кто ищет надежный и человечный проект для поддержки.</p>
+                        <p>Меня зовут Айнур, и я запускаю небольшое, но важное дело — производство качественных и доступных памятников из литьевого мрамора. Это не просто бизнес, а возможность дарить людям в трудную минуту возможность обрести достойное и вечное место памяти для своих близких без завышенных цен и долгих ожиданий.</p>
+                        <p>Проект полностью готов к запуску: есть технология, просчитана экономика, налажены каналы сбыта. Я уже вложил в него часть стартового капитала. Чтобы начать работу и выйти на плановые показатели, осталось не так много.</p>
+                    </div>
+                </div>
+                <div class="about-image fade-in delay-2">
+                    <img src="1.png" alt="Пример памятника из литьевого мрамора">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="benefits">
+        <div class="container">
+            <h2 class="section-title fade-in">Почему это выгодное и честное предложение?</h2>
+            <div class="benefits-grid">
+                <div class="benefit-card fade-in">
+                    <div class="benefit-icon"><i class="fas fa-chart-line"></i></div>
+                    <h3>Реальный бизнес, а не идея</h3>
+                    <p>Всё просчитано до рубля. Вы можете изучить подробную финансовую модель и бизнес-план.</p>
+                </div>
+                <div class="benefit-card fade-in delay-1">
+                    <div class="benefit-icon"><i class="fas fa-rocket"></i></div>
+                    <h3>Быстрая окупаемость</h3>
+                    <p>По нашим расчетам, вложения окупаются за 3-4 месяца благодаря низкой себестоимости и высокому спросу.</p>
+                </div>
+                <div class="benefit-card fade-in delay-2">
+                    <div class="benefit-icon"><i class="fas fa-bullseye"></i></div>
+                    <h3>Понятная цель</h3>
+                    <p>Ваши средства будут направлены на конкретные вещи: закупку оборудования, материалов и рекламу.</p>
+                </div>
+                <div class="benefit-card fade-in delay-1">
+                    <div class="benefit-icon"><i class="fas fa-shield-alt"></i></div>
+                    <h3>Прозрачность</h3>
+                    <p>Я открыт к полной отчетности. Вы будете знать, как и на что используются средства, с регулярными отчетами.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="gallery">
+        <div class="container">
+            <h2 class="section-title fade-in">Наша продукция</h2>
+            <p class="fade-in" style="text-align: center; max-width: 800px; margin: 0 auto 50px;">Мы создаем красивые и долговечные памятники из литьевого мрамора, которые сохранят память о близких на десятилетия.</p>
+            
+            <div class="gallery-grid">
+                <div class="gallery-item fade-in">
+                    <img src="1.png" alt="Памятник 1">
+                </div>
+                <div class="gallery-item fade-in delay-1">
+                    <img src="2.png" alt="Памятник 2">
+                </div>
+                <div class="gallery-item fade-in delay-2">
+                    <img src="3.png" alt="Памятник 3">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cooperation">
+        <div class="container">
+            <h2 class="section-title fade-in">Как мы видим наше сотрудничество?</h2>
+            <p class="fade-in" style="text-align: center; margin-bottom: 60px; max-width: 800px; margin-left: auto; margin-right: auto;">Я ищу не спонсоров, а партнеров, которые поверят в это дело и захотят стать частью проекта на старте. В ответ на вашу поддержку я готов предложить:</p>
+            
+            <div class="offer-cards">
+                <div class="offer-card fade-in">
+                    <h3>Возврат инвестиций</h3>
+                    <p>Возврат инвестиций с процентами (обсудим индивидуально в зависимости от суммы и срока).</p>
+                </div>
+                <div class="offer-card fade-in delay-1">
+                    <h3>Доля от прибыли</h3>
+                    <p>Долю от прибыли в первые несколько месяцев, чтобы вы быстро вернули вложения и получили доход.</p>
+                </div>
+                <div class="offer-card fade-in delay-2">
+                    <h3>Полная открытость</h3>
+                    <p>Полную открытость и отчетность о ходе проекта. Вы будете в курсе всех этапов развития бизнеса.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="form-section">
+        <div class="container">
+            <h2 class="section-title fade-in">Готовы рассмотреть возможность участия?</h2>
+            <p class="fade-in" style="text-align: center; margin-bottom: 50px; max-width: 800px; margin-left: auto; margin-right: auto;">Если наше предложение откликнулось вам, пожалуйста, укажите ниже ваши контакты и ту сумму, которую вы в принципе готовы были бы рассмотреть для инвестирования в этот проект. Это не обязывает вас ни к чему, а лишь поможет мне понять уровень интереса и связаться с вами для детального разговора.</p>
+            
+            <div class="form-container fade-in">
+                <form id="investmentForm">
+                    <div class="form-group">
+                        <label for="name">Ваше имя:</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">Ваш телефон:</label>
+                        <input type="tel" id="phone" name="phone" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Примерная сумма инвестиций, которую я готов обсудить:</label>
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="amount-10" name="amount" value="1000">
+                                <label for="amount-10">1 000 руб.</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="amount-25" name="amount" value="3000">
+                                <label for="amount-25">3 000 руб.</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="amount-50" name="amount" value="5000">
+                                <label for="amount-50">5 000 руб.</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="amount-other" name="amount" value="other">
+                                <label for="amount-other">Другая сумма</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group" id="otherAmountGroup" style="display: none;">
+                        <label for="otherAmount">Укажите сумму:</label>
+                        <input type="number" id="otherAmount" name="otherAmount" placeholder="Введите сумму в рублях">
+                    </div>
+                    
+                    <div class="checkbox">
+                        <input type="checkbox" id="agree" name="agree" required>
+                        <label for="agree">Я согласен(на) на обработку персональных данных и на то, что со мной свяжутся для презентации бизнес-плана.</label>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-block">Расскажите мне подробнее</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <h2 class="section-title fade-in">Контакты для прямой связи</h2>
+            <div class="contact-info fade-in">
+                <div class="contact-item">
+                    <i class="fas fa-phone-alt"></i>
+                    <div>
+                        <strong>Телефон/WhatsApp:</strong> <a href="tel:+79918166693">+7 991 816 66 93 (Айнур)</a>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-globe"></i>
+                    <div>
+                        <strong>Сайт:</strong> <a href="http://studiya-pamyati.ru" target="_blank">studiya-pamyati.ru</a>
+                    </div>
+                </div>
+            </div>
+            
+            <p class="fade-in delay-1" style="text-align: center; margin-top: 50px; font-style: italic; font-size: 1.2rem; max-width: 800px; margin-left: auto; margin-right: auto;">
+                Ваше доверие — это моя главная мотивация. Вместе мы сможем создать дело, которое будет приносить не только доход, но и реальную помощь людям в трудные моменты их жизни.
+            </p>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <p>© 2023 Проект "Память". Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <div class="notification" id="notification">
+        <div class="loader" id="loader"></div>
+        <span id="notification-text"></span>
+    </div>
+
+    <script>
+
+// Конфигурация для Telegram бота
+const TELEGRAM_BOT_TOKEN = '8426650834:AAHmCkR0RCtFMxhD_Twvxn2hqrDR0stZutU'; // Замените на токен вашего бота
+        const TELEGRAM_CHAT_ID = '7873914635'; // Замените на ваш chat_id
+        
+        // Функция показа уведомления
+        function showNotification(message, isError = false) {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notification-text');
+            const loader = document.getElementById('loader');
+            
+            notificationText.textContent = message;
+            notification.className = isError ? 'notification error' : 'notification';
+            loader.style.display = 'none';
+            
+            notification.classList.add('show');
+            
+            // Автоматически скрыть уведомление через 5 секунд
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 5000);
+        }
+        
+        // Функция отправки данных в Telegram
+        async function sendToTelegram(formData) {
+            const submitButton = document.querySelector('#investmentForm button[type="submit"]');
+            const loader = document.getElementById('loader');
+            
+            try {
+                // Показываем индикатор загрузки
+                submitButton.disabled = true;
+                loader.style.display = 'block';
+                showNotification('Отправляем вашу заявку...');
+                
+                // Формируем текст сообщения
+                let message = `<b>Новая заявка на инвестирование</b>\n`;
+                message += `<b>Имя:</b> ${formData.name}\n`;
+                message += `<b>Телефон:</b> ${formData.phone}\n`;
+                message += `<b>Сумма инвестиций:</b> ${formData.amount}\n`;
+                message += `<b>Время заявки:</b> ${new Date().toLocaleString('ru-RU')}`;
+                
+                // Отправляем запрос к Telegram Bot API
+                const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        chat_id: TELEGRAM_CHAT_ID,
+                        text: message,
+                        parse_mode: 'HTML'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.ok) {
+                    showNotification('Заявка успешно отправлена! Мы свяжемся с вами в ближайшее время.');
+                    return true;
+                } else {
+                    throw new Error(data.description || 'Ошибка отправки сообщения');
+                }
+            } catch (error) {
+                console.error('Ошибка отправки в Telegram:', error);
+                showNotification('Произошла ошибка при отправке. Пожалуйста, свяжитесь с нами напрямую.', true);
+                return false;
+            } finally {
+                submitButton.disabled = false;
+                loader.style.display = 'none';
+            }
+        }
+        
+        // Обработка отправки формы
+        document.getElementById('investmentForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Собираем данные формы
+            const formData = {
+                name: document.getElementById('name').value,
+                phone: document.getElementById('phone').value,
+                amount: document.querySelector('input[name="amount"]:checked').value === 'other' 
+                    ? document.getElementById('otherAmount').value + ' руб.' 
+                    : document.querySelector('input[name="amount"]:checked').value + ' руб.'
+            };
+            
+            // Отправляем данные в Telegram
+            const success = await sendToTelegram(formData);
+            
+            if (success) {
+                this.reset();
+                document.getElementById('otherAmountGroup').style.display = 'none';
+            }
+        });
+        
+
+        // Плавная прокрутка
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Изменение хедера при прокрутке
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Показ поля для другой суммы
+        document.querySelectorAll('input[name="amount"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const otherAmountGroup = document.getElementById('otherAmountGroup');
+                if (this.value === 'other') {
+                    otherAmountGroup.style.display = 'block';
+                } else {
+                    otherAmountGroup.style.display = 'none';
+                }
+            });
+        });
+
+        // Обработка отправки формы
+        document.getElementById('investmentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Здесь код для отправки данных формы
+            alert('Спасибо за вашу заявку! Мы свяжемся с вами в ближайшее время для обсуждения деталей.');
+            this.reset();
+            document.getElementById('otherAmountGroup').style.display = 'none';
+        });
+
+        // Анимация появления элементов при скролле
+        function checkFade() {
+            const fadeElements = document.querySelectorAll('.fade-in');
+            
+            fadeElements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.style.opacity = 1;
+                }
+            });
+        }
+        
+        window.addEventListener('scroll', checkFade);
+        window.addEventListener('load', checkFade);
+    </script>
+</body>
+</html>
